@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/home.css">
+
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'
+	rel='stylesheet'>
+	
+	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+<title>Dashboard</title>
+
+<style> 
+
+*{
+  font-family: "Poppins" , sans-serif;
+}
+
+#myInput {
+  background-image: url('Images/searchicon.png'); /* Add a search icon to input */
+  outline-color:#695CFE;
+  background-repeat: no-repeat; /* Do not repeat the icon image */
+  width: 100%; /* Full-width */
+  /* font-size: 16px; */ /* Increase font-size */
+  padding: 12px 20px 12px 40px; /* Add some padding */
+  border: 1px solid #ddd; /* Add a grey border */
+  margin-bottom: 12px; /* Add some space below the input */
+  background-size: contain;
+}
+
+#myTable {
+  border-collapse: collapse; /* Collapse borders */
+  width: 100%; /* Full-width */
+  border: 1px solid #ddd; /* Add a grey border */
+  /* font-size: 18px; */ /* Increase font-size */
+	
+}
+
+#myTable th, #myTable td {
+  text-align: left; /* Left-align text */
+  padding: 12px; /* Add padding */
+}
+
+#myTable td.dark {
+  color: #fff;
+  text-align: left; /* Left-align text */
+  padding: 12px; /* Add padding */
+ 
+}
+
+#myTable tr {
+  /* Add a bottom border to all table rows */
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  /* Add a grey background color to the table header and on hover */
+  background-color: #f1f1f1;
+}
+
+
+.button {
+  border: none;
+  border-radius: 12px;
+  /* color: white; */
+   padding: 4px 4px 4px 4px; 
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.edit {
+  color: black; 
+  border: 2px solid #695CFE;
+}
+
+.edit:hover {
+  background-color: #695CFE;
+  color: white;
+}
+
+.delete {
+  color: black; 
+  border: 2px solid #ff0000;
+}
+
+.delete:hover {
+  background-color: #ff0000;
+  color: white;
+}
+
+#Registerbutton{
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #695CFE;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    user-select: none;
+}
+
+.button .btn-text{
+    font-size: 16px;
+    font-weight: 400px;
+    color: #fff;
+}
+
+#popup {
+    width:300px;
+    height:150px;
+   /* padding:20px;*/
+    background-color:gray;    
+    position:relative;
+    bottom: 30%;
+    left:40%;
+    display:center;
+	/*z-index: 9;*/
+}
+
+/*#popupheader {
+  padding: 10px;
+  cursor: move;
+  z-index: 10;
+}*/
+
+</style>
+
+</head>
+<body>
+	<nav class="sidebar close">
+		<header>
+			<div class="image-text">
+				<span class="image"> <!--<img src="logo.png" alt="">-->
+				</span>
+
+				<div class="text logo-text">
+					<span class="usrname" id="usrname"></span>
+				</div>
+			</div>
+
+			<i class='bx bx-chevron-right toggle'></i>
+		</header>
+
+		<div class="menu-bar">
+			<div class="menu">
+
+				<ul class="menu-links">
+					<li class="nav-link"><a style="background-color: #695CFE;" href="home.html"> <i
+							class='bx bx-home-alt icon' style="color: #fff;"></i> <span style="color: #fff;" class="text nav-text">Dashboard</span>
+					</a></li>
+
+					<li class="nav-link"><a onclick="redirectToRegister()" ><i
+							class='bx bx-registered icon'></i> <span class="text nav-text">Register</span>
+					</a></li>
+
+				</ul>
+			</div>
+
+			<div class="bottom-content">
+				<li class=""><a href="javascript:logoutAPI();"> <i
+						class='bx bx-log-out icon'></i> <span class="text nav-text">Logout</span>
+				</a></li>
+
+				<li class="mode">
+					<div class="sun-moon">
+						<i class='bx bx-moon icon moon'></i> <i class='bx bx-sun icon sun'></i>
+					</div> <span class="mode-text text">Dark mode</span>
+
+					<div class="toggle-switch">
+						<span class="switch"></span>
+					</div>
+				</li>
+
+			</div>
+		</div>
+
+	</nav>
+
+	<section class="home">
+		<div class="text"><h6>Welcome <span class="usr" id="usr"></span></h6><center>Customer Management</center></div>
+		<!--<div class="text">Welcome <span class="usr" id="usr"></span></div>-->
+		<div class="button" id="Registerbutton" style="margin-left:65px;">
+            <span class="btn-text" onclick="redirectToRegister()">Add New Customer</span>
+        </div>
+		<div class='container'>
+		
+		
+
+			<div class="innerContainer" style="margin-left: 5%; margin-top: 2%;margin-right: 5%;">
+				<label style="color: green;" class="control-label" id="sl"></label>
+				<label style="color: red;" class="control-label" id="error"></label>
+				<br>
+				<br> 
+				
+				<div id="tablediv">
+				<input type="text" id="myInput" onkeyup="Table()" placeholder="Search">
+
+				<table id="myTable">
+					<thead>
+						<tr class="header">
+							<th style="cursor: pointer;" onclick="sortTable(0)">Name</th>
+							<th  style="cursor: pointer;"  onclick="sortTable(1)">Email</th>
+							<th  style="cursor: pointer;"  onclick="sortTable(2)">Mobile No</th>
+							<th style="cursor: pointer;"  onclick="sortTable(3)">DOB</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody id="data">
+
+					</tbody>
+				</table>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" value="" id="deleteID">
+		<div id="popup" align="center">
+			<label class="btn-close" for="3" onclick="closePopup()" style="margin-bottom:2px; padding: 1px 3px;float: right;color: #fff;cursor: pointer;"">X</label>
+			<div id="popupheader" style="padding: 30px;">
+			<div align="center" style="color:white">Enter User Password</div>
+			<input id="pass" align="center" style="outline-color: #695CFE; z-index: 1000;"type="password"/><br><br>
+			
+			<button align="center" onclick="done()">Done</button>    
+		</div>
+		</div>
+	</section>
+
+	<script>
+	//var baseUrl ="http://localhost:8080/CustomerManagement";
+	//var baseUrl ="/CustomerManagement";
+	var baseUrl ="";
+	document.getElementById("popup").style.display = "none";
+	var username = sessionStorage.getItem("username");
+    
+    if(username=='' || username==null)
+    		window.location.href="index.html";
+    
+    //console.log('username...'+username);
+    document.getElementById('usrname').innerHTML = username;
+    document.getElementById('usr').innerHTML = username;
+    //sessionStorage.setItem("username", username);
+	
+	/*function Table() {
+		  // Declare variables
+		  var input, filter, table, tr, td,td2, i, txtValue;
+		  input = document.getElementById("myInput");
+		  filter = input.value.toUpperCase();
+		  table = document.getElementById("myTable");
+		  tr = table.getElementsByTagName("tr");
+
+		  // Loop through all table rows, and hide those who don't match the search query
+		  for (i = 0; i < tr.length; i++) {
+		    td = tr[i].getElementsByTagName("td")[0];
+			td2 = tr[i].getElementsByTagName("td")[2];
+		    
+			if (td) {
+		      txtValue = td.textContent || td.innerText;
+		      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+		        tr[i].style.display = "";
+		      } else {
+		        tr[i].style.display = "none";
+		      }
+		    }
+			
+
+
+		  }
+		}*/
+
+		function Table() {
+			var input = document.getElementById("myInput");
+			var table = document.getElementById("data");
+		  
+  		let filter = input.value.toUpperCase();
+  		rows = table.getElementsByTagName("TR");
+  		let flag = false;
+
+  for (let row of rows) {
+    let cells = row.getElementsByTagName("TD");
+    for (let cell of cells) {
+      if (cell.textContent.toUpperCase().indexOf(filter) > -1) {
+        if (filter) {
+          //cell.style.backgroundColor = 'yellow';
+        } else {
+          //cell.style.backgroundColor = '';
+        }
+
+        flag = true;
+      } else {
+        //cell.style.backgroundColor = '';
+      }
+    }
+
+    if (flag) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+
+    flag = false;
+  }
+}
+	
+	async function tableListApi() {
+	    
+		 var username = sessionStorage.getItem("username");
+		    
+
+	    let headers = new Headers();
+	  headers.append('Content-Type', 'application/json');
+	  headers.append('Accept', 'application/json');
+	  headers.append('username', username);
+
+	  fetch(baseUrl+"/v1/customer/list",{
+		    mode: 'cors',
+		    method: 'GET',
+		    headers: headers
+		    }).then(
+			  res => {
+			    res.json().then(
+			      data => {
+			        //console.log('data..'+data.data);
+			        if (data.data.length > 0) {
+
+			          var temp = "";
+			          data.data.forEach((itemData) => {
+			        	  
+			        	var rowData = (itemData.customer_full_name+'!'+itemData.email+'!'+itemData.mobileno+'!'+itemData.date_of_birth.split(' ')[0]+'!'+itemData.address+'!'+itemData.zipcode+'!'+itemData.id).replace(" ", "*");
+						//console.log('rowData'+rowData);
+					
+			        	temp += "<tr><input type='hidden' id='rowD'+"+itemData.id+"' value=''>";
+			            temp += "<td class='tdata'>" + itemData.customer_full_name + "</td>";
+			            temp += "<td class='tdata'>" + itemData.email + "</td>";
+			            temp += "<td class='tdata'>" + itemData.mobileno + "</td>";
+			            temp += "<td class='tdata'>" + itemData.date_of_birth.split(' ')[0]+ "</td>";
+			            temp += "<td><button class='button edit' id="+rowData+" onclick='editPage(this.id)'>Edit</button> <button class='button delete' id='"+itemData.id+"' onclick='showPopup(this.id)'>Delete</button></td></tr>";
+			          });
+			          document.getElementById('data').innerHTML = temp;
+			          document.getElementById('sl').innerHTML = data.desc;
+			        }else
+			        	{
+			        	var temp = "";
+			        	temp += "<tr>";
+			            temp += "<td>No Data Available</td></tr>";
+			            document.getElementById('data').innerHTML = temp;
+			        	document.getElementById('error').innerHTML = data.desc;
+			        	}
+			      }
+			    )
+			  }
+			)
+	  
+	  };
+	  tableListApi();
+
+	  
+    
+        const body = document.querySelector('body'),
+      sidebar = body.querySelector('nav'),
+      toggle = body.querySelector(".toggle"),
+      
+      modeSwitch = body.querySelector(".toggle-switch"),
+      modeText = body.querySelector(".mode-text");
+
+
+toggle.addEventListener("click" , () =>{
+    sidebar.classList.toggle("close");
+})
+
+
+modeSwitch.addEventListener("click" , () =>{
+    body.classList.toggle("dark");
+    
+    if(body.classList.contains("dark")){
+        modeText.innerText = "Light mode";
+    }else{
+        modeText.innerText = "Dark mode";
+        
+    }
+});
+
+/*dragElement(document.getElementById("popup"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}*/
+
+
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc";
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+    </script>
+
+	<script type="text/javascript">
+	
+	async function editPage(data)
+	{
+		//var name = $(this).closest('tr').find('.fname').text();
+		//console.log('data..'+data);	
+		localStorage.setItem("data",data);
+		localStorage.setItem("action","edit");
+		window.location.href = "register.html";
+	}
+	
+	function redirectToRegister(){
+		localStorage.removeItem('action');
+		localStorage.setItem("action","");	
+		window.location.href = "register.html";
+	}
+	
+	function done() { 
+    document.getElementById("popup").style.display = "none";
+    var password = document.getElementById("pass").value;
+	var id = document.getElementById("deleteID").value;	
+
+	//console.log('pass..'+password);
+	//console.log('id..'+id);
+	deleteAPI(id,password);
+};
+
+function showPopup(id) {
+	//console.log('id in showpopup'+id);
+	document.getElementById("deleteID").value=id;	
+     document.getElementById("popup").style.display = "block";
+}
+function closePopup() {
+
+     document.getElementById("popup").style.display = "none";
+}
+
+    async function deleteAPI(id,password) {
+
+		//console.log('pass1..'+password);
+	//console.log('id1..'+id);
+
+ 	   let headers = new Headers();
+ 	  headers.append('Content-Type', 'application/json');
+ 	  headers.append('Accept', 'application/json');
+ 	  headers.append('username',username);
+		
+ 	  const response = await fetch(baseUrl+'/v1/customer/delete/', {
+ 	    mode: 'cors',
+ 	    method: 'DELETE',
+ 	    headers: headers,
+		 body: JSON.stringify({id: id, password: password})
+ 	    });
+ 	  	
+ 	  var data = await response.json();
+ 	   
+ 		if(data.status=='true')
+ 			{
+ 			location.reload();
+ 			}
+ 	   else
+		{
+			document.getElementById('sl').innerHTML = '';
+ 	     	document.getElementById('error').innerHTML = data.desc;
+		}
+
+ 	  }
+    
+    async function logoutAPI() {
+    	   
+    	   let headers = new Headers();
+    	  headers.append('Content-Type', 'application/json');
+    	  headers.append('Accept', 'application/json');
+    	  headers.append('username',username);
+
+    	  const response = await fetch(baseUrl+'/v1/user/logout', {
+    	    mode: 'cors',
+    	    method: 'GET',
+    	    headers: headers
+    	    });
+    	  	
+    	  var data = await response.json();
+    	   
+    		if(data.status=='true')
+    			{
+    			  sessionStorage.removeItem('username');
+    	     	window.location.href = "index.html";
+    			}
+    	   else
+    	     	document.getElementById('error').innerHTML = data.desc;
+
+    	  }
+    	    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/home.css">
+
+<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'
+	rel='stylesheet'>
+  <link
+  href="css/register.css" rel="stylesheet" />
+<title>Register</title>
+
+</head>
+<body>
+	<nav class="sidebar close">
+		<header>
+			<div class="image-text">
+				<span class="image"> <!--<img src="logo.png" alt="">-->
+				</span>
+
+				<div class="text logo-text">
+					<span class="usrname" id="usrname"></span>
+				</div>
+			</div>
+
+			<i class='bx bx-chevron-right toggle'></i>
+		</header>
+
+		<div class="menu-bar">
+			<div class="menu">
+
+				<ul class="menu-links">
+					<li class="nav-link"><a href="home.html"> <i
+							class='bx bx-home-alt icon'></i> <span class="text nav-text">Dashboard</span>
+					</a></li>
+
+					<li class="nav-link"><a style="background-color: #695CFE;" onclick="redirectToRegister()"> <i
+							class='bx bx-registered icon' style="color: #fff;"></i> <span style="color: #fff;" class="text nav-text">Register</span>
+					</a></li>
+
+				</ul>
+			</div>
+
+			<div class="bottom-content">
+				<li class=""><a href="javascript:logoutAPI();"> <i
+						class='bx bx-log-out icon'></i> <span class="text nav-text">Logout</span>
+				</a></li>
+
+				<li class="mode">
+					<div class="sun-moon">
+						<i class='bx bx-moon icon moon'></i> <i class='bx bx-sun icon sun'></i>
+					</div> <span class="mode-text text">Dark mode</span>
+
+					<div class="toggle-switch">
+						<span class="switch"></span>
+					</div>
+				</li>
+
+			</div>
+		</div>
+
+	</nav>
+
+	<section class="home">
+		<div class="text"><h6>Welcome <span class="usr" id="usr"></span></h6><center>Customer Management</center></div>
+		
+		
+<!--  <center>-->
+		<div align="center" class='container'>
+		
+			<form action="" class="register-form" autocomplete="off">
+				<label style="color: green;" class="control-label" id="sl"></label>
+				<label style="color: red;" class="control-label" id="error"></label>
+				<br>
+				<br> 
+				
+							
+          <div class="input-field">
+            <label for="pwd" style="margin-right:15em;" >Full Name</label>
+            <input type="text" id="name" class="name" />
+          </div>
+        
+        
+        
+          <div class="input-field">
+          <label for="pwd" style="margin-right:17em;">Email</label>
+            <input type="email" id="email" class="email" onblur="emailvalidation()" />
+          </div>
+        
+        
+          <div class="input-field">
+          <label for="pwd" style="margin-right:15em;">Mobile No</label>
+            <input type="number" id="mobileno" class="mobileno" />
+          </div>
+        
+          <div class="input-field">
+          <label for="pwd" style="margin-right:14em;">Date of Birth</label>
+            <input type="date" id="dob" class="dob" />
+          </div>
+        
+        
+        
+          <div class="input-field">
+          <label  for="pwd" style="margin-right:16em;">Address</label>
+            <input type="text" id="address" class="address" />
+          </div>
+        
+        
+          <div class="input-field">
+          <label  for="pwd" style="margin-right:16em;">Zipcode</label>
+            <input type="number" id="zipcode" class="zipcode" />
+          </div>
+        
+        
+        <br>
+        
+          <button type="button" id='register' style="margin-left:150px;" onclick="customerRegisterApi()">Register</button>
+         <button type="button" id='edit' style="margin-right:250px;" onclick="customerEditApi()">Edit</button>
+         
+       
+        
+				
+			</form>
+			</div>
+   <!--   </center> -->
+	</section>
+	<input type="hidden" id="customerID" value="">
+	<script>
+	//var baseUrl ="http://localhost:8080/CustomerManagement";
+	//var baseUrl ="/CustomerManagement";
+	var baseUrl ="";
+	
+	var username = sessionStorage.getItem("username");
+    
+    if(username=='' || username==null)
+    		window.location.href="index.html";
+    
+    //console.log('username...'+username);
+    document.getElementById('usrname').innerHTML = username;
+    document.getElementById('usr').innerHTML = username;
+	
+
+        const body = document.querySelector('body'),
+      sidebar = body.querySelector('nav'),
+      toggle = body.querySelector(".toggle"),
+      
+      modeSwitch = body.querySelector(".toggle-switch"),
+      modeText = body.querySelector(".mode-text");
+
+
+toggle.addEventListener("click" , () =>{
+    sidebar.classList.toggle("close");
+})
+
+
+modeSwitch.addEventListener("click" , () =>{
+    body.classList.toggle("dark");
+    
+    if(body.classList.contains("dark")){
+        modeText.innerText = "Light mode";
+    }else{
+        modeText.innerText = "Dark mode";
+    }
+});
+
+/*const urlString = window.location.search;
+console.log('urlString..'+urlString);
+const urlParams = new URLSearchParams(urlString);
+console.log('urlParams..'+urlParams);
+const action = urlParams.get('action');*/
+
+var action = localStorage.getItem("action");
+//console.log('action..'+action);
+
+if(action=='edit')
+{
+
+  document.getElementById("edit").style.visibility = "visible";
+  document.getElementById("register").style.visibility = "hidden";
+
+  var data = localStorage.getItem("data").replace("*", " ");
+    const myArray = data.split('!');
+
+        
+        document.getElementById('name').value=myArray[0];
+        document.getElementById('email').value=myArray[1];
+        document.getElementById('mobileno').value=myArray[2];
+        document.getElementById('dob').value=myArray[3];
+        document.getElementById('address').value=myArray[4];
+        document.getElementById('zipcode').value=myArray[5];
+
+        document.getElementById('customerID').value=myArray[6];
+        //document.getElementById("email").disabled = true;
+
+}else
+{
+	document.getElementById('customerID').value='';
+  document.getElementById("register").style.visibility = "visible";
+  document.getElementById("edit").style.visibility = "hidden";  
+}
+
+    </script>
+
+	<script type="text/javascript">
+
+function redirectToRegister(){
+		localStorage.setItem("action","");
+		window.location.href = "register.html";
+	}
+  
+function emailvalidation(){
+    	  
+    	  document.getElementById("error").innerHTML="";
+    	  
+    		 var user_email=document.getElementById("email").value;
+    		 var mailformat = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+    	 		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    		   if(!user_email.match(mailformat) && user_email!='')  {
+    			  // alert("Please enter a valid Email");
+    			   document.getElementById("error").innerHTML="Please enter a valid Email";
+    			 document.getElementById("email").value="";
+    	         return false;
+    		}else{
+    			 return true;
+    		}
+    	}
+	
+    async function customerRegisterApi() {
+      //console.log('inside customerRegisterApi');
+      /*const urlString = window.location.search;
+      console.log('urlString..'+urlString);
+      const urlParams = new URLSearchParams(urlString);
+      console.log('urlParams..'+urlParams);
+      const action = urlParams.get('action');
+      console.log('action..'+action);
+      if(action=='reg')
+      url.searchParams.set('action','reg');*/
+
+        document.getElementById('sl').innerHTML = '';
+        document.getElementById('error').innerHTML = '';
+
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var mobileno = document.getElementById('mobileno').value;
+        var dob = document.getElementById('dob').value;
+        var address = document.getElementById('address').value;
+        var zipcode = document.getElementById('zipcode').value;
+
+          if(name==null || name=='')
+          {
+            //console.log('inside name error');
+            document.getElementById('error').innerHTML = 'Full Name is Mandatory';
+            return false;
+          }
+          else if(email==null || email=='')
+          {
+            document.getElementById('error').innerHTML = 'Email is Mandatory';
+            return false;
+          }
+          else if(mobileno==null || mobileno=='')
+          {
+            document.getElementById('error').innerHTML = 'Mobile No is Mandatory';
+            return false;
+          }
+          else if(dob==null || dob=='')
+          {
+            document.getElementById('error').innerHTML = 'Date of Birth is Mandatory';
+            return false;
+          }
+          else if(address==null || address=='')
+          {
+            document.getElementById('error').innerHTML = 'Address is Mandatory';
+            return false;
+          }
+          else if(zipcode==null || zipcode=='')
+          {
+            document.getElementById('error').innerHTML = 'Zipcode is Mandatory';
+            return false;
+          }
+        
+        let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Accept', 'application/json');
+      headers.append('username',username);
+
+      const response = await fetch(baseUrl+'/v1/customer/add', {
+        mode: 'cors',
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({customer_full_name: name, email: email,mobileno: mobileno,date_of_birth: dob,address: address,zipcode: zipcode,maker_username : username})
+        });
+
+        var data = await response.json();
+      
+   		if(data.status=='true')
+   			{
+   			document.getElementById('sl').innerHTML = data.desc;
+   				
+   			document.getElementById("name").value='';
+            document.getElementById("email").value='';
+            document.getElementById("mobileno").value='';
+            document.getElementById("dob").value='';
+            document.getElementById("address").value='';
+            document.getElementById("zipcode").value='';
+   			
+   			}
+       else
+         	document.getElementById('error').innerHTML = data.desc;
+   		
+      };
+      
+      
+      async function customerEditApi() {
+
+        document.getElementById('sl').innerHTML = '';
+        document.getElementById('error').innerHTML = '';
+
+          var name = document.getElementById('name').value;
+          var email = document.getElementById('email').value;
+          var mobileno = document.getElementById('mobileno').value;
+          var dob = document.getElementById('dob').value;
+          var address = document.getElementById('address').value;
+          var zipcode = document.getElementById('zipcode').value;
+          
+          var id = document.getElementById('customerID').value;
+          
+          if(name==null || name=='')
+          {
+            document.getElementById('error').innerHTML = 'Full Name is Mandatory';
+            return false;
+          }
+          else if(email==null || email=='')
+          {
+            document.getElementById('error').innerHTML = 'Email is Mandatory';
+            return false;
+          }
+          else if(mobileno==null || mobileno=='')
+          {
+            document.getElementById('error').innerHTML = 'Mobile No is Mandatory';
+            return false;
+          }
+          else if(dob==null || dob=='')
+          {
+            document.getElementById('error').innerHTML = 'Date of Birth is Mandatory';
+            return false;
+          }
+          else if(address==null || address=='')
+          {
+            document.getElementById('error').innerHTML = 'Address is Mandatory';
+            return false;
+          }
+          else if(zipcode==null || zipcode=='')
+          {
+            document.getElementById('error').innerHTML = 'Zipcode is Mandatory';
+            return false;
+          }
+          
+
+          let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        headers.append('username',username);
+
+        const response = await fetch(baseUrl+'/v1/customer/edit', {
+          mode: 'cors',
+          method: 'PUT',
+          headers: headers,
+          body: JSON.stringify({id: id,customer_full_name: name, email: email,mobileno: mobileno,date_of_birth: dob,address: address,zipcode: zipcode,maker_username : username})
+          });
+
+          var data = await response.json();
+        
+     		if(data.status=='true')
+     			{
+     			document.getElementById('sl').innerHTML = data.desc;
+     				
+     			document.getElementById("name").value='';
+              document.getElementById("email").value='';
+              document.getElementById("mobileno").value='';
+              document.getElementById("dob").value='';
+              document.getElementById("address").value='';
+              document.getElementById("zipcode").value='';
+              
+              localStorage.setItem("action","");
+              window.location.href = "home.html";  
+     			}
+         else
+           	document.getElementById('error').innerHTML = data.desc;
+     		
+        };
+    
+    async function logoutAPI() {
+    	   
+    	   let headers = new Headers();
+    	  headers.append('Content-Type', 'application/json');
+    	  headers.append('Accept', 'application/json');
+    	  headers.append('username',username);
+
+    	  const response = await fetch(baseUrl+'/v1/user/logout', {
+    	    mode: 'cors',
+    	    method: 'GET',
+    	    headers: headers
+    	    });
+    	  	
+    	  var data = await response.json();
+    	   
+    		if(data.status=='true')
+    			{
+    			  sessionStorage.removeItem('username');
+    	     	window.location.href = "index.html";
+    			}
+    	   else
+    	     	document.getElementById('error').innerHTML = data.desc;
+
+    	  }
+    	    </script>
+
+
+</body>
+</html>
